@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.praver.springboot.mapper.AdminMapper">
+    <insert id="save">
+        insert into admin(username, phone, password, email,avatar)
+        values (#{username}, #{phone}, #{password}, #{email},#{avatar})
+    </insert>
+    <update id="updateById">
+        update admin
+        <set>
+            <if test="avatar != null and avatar != ''">
+                avatar = #{avatar},
+            </if>
+            <if test="username != null and username != ''">
+                username = #{username},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="email != null and email != ''">
+                email = #{email},
+            </if>
+            updatetime = #{updatetime},
+            status=#{status}
+        </set>
+        where id=#{id}
+    </update>
+    <delete id="deleteById">
+        delete
+        from admin
+        where id = #{id}
+    </delete>
+    <delete id="deleteList">
+        delete from admin where id in
+        <foreach collection="idList" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="list" resultType="com.praver.springboot.entity.Admin">
+        select *
+        from `admin`
+        order by id desc
+    </select>
+    <select id="listByCondition" resultType="com.praver.springboot.entity.Admin">
+        select * from `admin`
+        <where>
+            <if test="username != null and username != ''">
+                username like concat('%',#{username},'%')
+            </if>
+            <if test="phone != null and phone != ''">
+                and phone like concat('%',#{phone},'%')
+            </if>
+            <if test="email != null and email != ''">
+                and email like concat('%',#{email},'%')
+            </if>
+        </where>
+        order by id desc
+    </select>
+    <select id="getById" resultType="com.praver.springboot.entity.Admin">
+        select *
+        from admin
+        where id = #{id}
+    </select>
+    <select id="getForLogin" resultType="com.praver.springboot.entity.Admin">
+        select *
+        from admin
+        where username = #{username}
+          and password = #{password}
+    </select>
+    <select id="getByUsername" resultType="com.praver.springboot.entity.Admin">
+        select * from admin where username =#{username}
+    </select>
+
+
+</mapper>
